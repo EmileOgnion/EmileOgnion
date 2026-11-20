@@ -60,8 +60,6 @@ header {
   color: var(--muted);
   margin-top: 0.15em;
 }
-
-/* Hamburger menu */
 .hamburger {
   background: none;
   border: none;
@@ -92,8 +90,6 @@ header {
 .hamburger.active .bar:nth-child(3) {
   transform: translateY(-6.5px) rotate(-45deg);
 }
-
-/* Dropdown menu */
 .dropdown-menu {
   position: fixed;
   top: 0; right: 0;
@@ -142,7 +138,6 @@ header {
   opacity: 1;
   pointer-events: auto;
 }
-
 main {
   position: relative;
   z-index: 1;
@@ -233,8 +228,6 @@ main {
   margin-top: 0.3rem;
   letter-spacing: 0.06em;
 }
-
-/* Artwork Detail View */
 #artwork-detail {
   display: none;
   position: relative;
@@ -321,7 +314,6 @@ main {
   text-align: left;
   white-space: pre-line;
 }
-
 #biografia {
   position: relative;
   z-index: 1;
@@ -467,8 +459,6 @@ main {
   margin-top: 1rem;
   min-height: 1.2em;
 }
-
-/* Fullscreen Zoom Lightbox */
 .lightbox {
   display: none;
   position: fixed;
@@ -574,17 +564,14 @@ footer p + p {
   </button>
 </header>
 
-<!-- Overlay -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
-<!-- Dropdown Menu -->
 <nav class="dropdown-menu" id="dropdownMenu">
   <a onclick="navTo('gallery')">Opere</a>
   <a onclick="navTo('biografia')">Biografia</a>
   <a onclick="navTo('contatto')">Contatto</a>
 </nav>
 
-<!-- Gallery View -->
 <main id="gallery-view">
   <div class="page-title">
     <h1>Opere</h1>
@@ -626,7 +613,6 @@ footer p + p {
   </div>
 </main>
 
-<!-- Artwork Detail View -->
 <section id="artwork-detail">
   <button class="back-btn" onclick="showGallery()">&larr; Torna alle opere</button>
   <div class="detail-image" id="detailImage" onclick="openZoom()">
@@ -648,10 +634,10 @@ footer p + p {
       <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png" alt="Émile Ognion" draggable="false">
     </div>
     <div class="bio-text">
-      <p>Émile Ognion è un pittore francese non di fama mondiale.</p>
-      <p>Il suo lavoro rimane ancora poco conosciuto dal grande pubblico, ma continua con ostinazione la sua ricerca sulle forme ordinarie e la luce nascosta che le abita.</p>
-      <p>Attraverso l'inchiostro, l'acrilico e il pastello, esplora il rapporto tra vuoto e segno, tra silenzio e voce, tra gesto e accumulo.</p>
-      <p>Ogni opera è un tentativo di catturare l'infinita luce interiore che cela nella banalità apparente delle cose.</p>
+      <p>Sono un pittore francese, non di fama mondiale.</p>
+      <p>Il mio lavoro rimane ancora poco conosciuto dal grande pubblico, ma continuo con ostinazione la mia ricerca sulle forme ordinarie e la luce nascosta che le abita.</p>
+      <p>Attraverso l'inchiostro, l'acrilico e il pastello, esploro il rapporto tra vuoto e segno, tra silenzio e voce, tra gesto e accumulo.</p>
+      <p>Ogni mia opera è un tentativo di catturare l'infinita luce interiore che cela nella banalità apparente delle cose.</p>
     </div>
   </div>
 </section>
@@ -678,7 +664,6 @@ footer p + p {
   </form>
 </section>
 
-<!-- Fullscreen Zoom Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeZoom(event)">
   <img src="" alt="" class="lightbox-img" id="zoomImg" draggable="false">
 </div>
@@ -692,7 +677,6 @@ footer p + p {
 </footer>
 
 <script>
-  // Anti-download
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('dragstart', e => e.preventDefault());
   document.addEventListener('selectstart', e => e.preventDefault());
@@ -707,7 +691,6 @@ footer p + p {
     }
   });
 
-  // Hamburger menu
   const hamburger = document.getElementById('hamburger');
   const dropdownMenu = document.getElementById('dropdownMenu');
   const menuOverlay = document.getElementById('menuOverlay');
@@ -744,28 +727,54 @@ footer p + p {
       title: "Onion",
       year: "2026",
       medium: "Inchiostro su carta &middot; 10 000 &times; 10 000 pixel",
-      desc: "Linee che convergono, linee che si annodano. Un vortice di segni che affonda verso il centro, verso il cuore nascosto della cipolla.\n\nOgni tratto è un gesto ripetuto, una mantra visiva che cerca di raggiungere l'essenziale attraverso l'accumulo, la stratificazione, la persistenza.\n\nIl bianco non è vuoto, ma resistenza. Il nero non è assenza, ma presenza totale. Nel punto in cui tutto si concentra, tutto diviene silenzio."
+      desc: `Linee che convergono, linee che si annodano. Un vortice di segni che affonda verso il centro, verso il cuore nascosto della cipolla. Si tratta di un viaggio verso l'interno, un'immersione nelle pieghe nascoste della forma più umile e più antica. La cipolla, simbolo universale di stratificazione, diventa qui metafora dell'anima umana: strato dopo strato, pellicola dopo pellicola, si scopre che al centro non c'è nulla di solido, solo un altro inizio.
+
+Ogni tratto è un gesto ripetuto, una mantra visiva che cerca di raggiungere l'essenziale attraverso l'accumulo, la stratificazione, la persistenza. L'inchiostro nero, denso e implacabile, si deposita sulla carta come memoria di un gesto eseguito centinaia di volte, ogni volta identico e ogni volta diverso. Non esiste linea perfetta, né esiste linea sbagliata: esiste solo il ritmo del respiro, la cadenza del polso, il sussurro della mano che si muove senza chiedere il permesso.
+
+Il bianco non è vuoto, ma resistenza. È lo spazio che rifiuta di essere riempito, il silenzio che si oppone alla parola, la pausa che dà senso alla musica. Il nero non è assenza, ma presenza totale: è l'ombra che conferisce volume alla luce, è la notte che rende possibile il giorno. Nel punto in cui tutto si concentra, tutto diviene silenzio: il centro del vortice è immobile, anche se tutto intorno turbinava. È in quel punto zero che l'opera trova la verità dell'opera, non nella spettacolarità della forma, ma nella quiete assoluta del gesto compiuto.
+
+Ho lavorato a questa serie per mesi, ripetendo lo stesso motivo fino a perdere la nozione del tempo. Non si tratta di perfezionismo, ma di devozione: ogni foglio è un atto di fede verso la possibilità che l'arte possa emergere dalla ripetizione, dalla pazienza, dall'umiltà di chi sa che la fama non conta, ma conta solo il segno.`
     },
     {
       image: "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1281.png",
       title: "Frammenti di Luce",
       year: "2026",
       medium: "Acrilico su tela &middot; 10 000 &times; 10 000 pixel",
-      desc: "Linee nere che tagliano, colori che si scontrano e si abbracciano. Ogni frammento è un istante di luce catturato, un momento in cui l'ordine e il caos si incontrano senza mai definirsi.\n\nLe forme geometriche si sovrappongono come strati di memoria, ogni colore vibra con la sua propria frequenza. Niente è fisso, tutto è in movimento. Il nero non è assenza, ma confine — il silenzio tra le note."
+      desc: `Linee nere che tagliano lo spazio come lame di luce in un buio improvviso. Colori che si scontrano e si abbracciano, che si respingono e si cercano in un eterno dialogo senza fine. Ogni frammento è un istante di luce catturato, un momento in cui l'ordine e il caos si incontrano senza mai definirsi, senza mai cedere l'uno all'altro. È una danza di equilibri instabili, una composizione che vive nel suo proprio contraddire.
+
+Le forme geometriche si sovrappongono come strati di memoria, ogni colore vibra con la frequenza propria, la storia propria. Il rosso non è solo rosso: è il calore di una stanza d'estate, è l'imbarazzo di una confessione, è la rabbia trattenuta. Il blu non è solo blu: è la distanza di un ricordo, è il freddo del mattino, è la calma che precede la tempesta. Il giallo non è solo giallo: è la luce che entra di sbieco, è la speranza che non sa di essere speranza, è la felicità che sfiora e se ne va.
+
+Niente è fisso, tutto è in movimento. Persino quando l'occhio crede di aver trovato un punto di riposo, una forma stabile, essa si dissolve in un'altra sovrapposizione, in un altro strato di colore che nega ciò che sembrava affermare. L'opera non si completa mai: ogni sguardo la ricostruisce, ogni visitatore ne scrive una versione diversa. Il nero non è assenza, ma confine — il silenzio tra le note, la pausa che separa i battiti, il vuoto che dà forma al pieno.
+
+Ho dipinto questa tela senza schizzo preliminare, lasciando che il gesto decidesse il destino della composizione. Non c'è progetto, c'è solo incontro: l'incontro tra il pennello e la tela, tra il colore e la luce, tra l'intenzione e l'errore. È nell'errore, infatti, che risiede la vera natura di quest'opera.`
     },
     {
       image: "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1282.png",
       title: "Respiro di Colore",
       year: "2026",
       medium: "Pastello su carta &middot; 10 000 &times; 10 000 pixel",
-      desc: "Trazioni leggere, colori che si dissolvono, impronte di un gesto. Ogni striscia è un respiro, ogni sfumatura è un ricordo che svanisce prima di definirsi.\n\nIl bianco non è vuoto, ma spazio di possibilità. I colori si posano come polvere di farfalla, toccando la superficie senza mai pretenderla.\n\nQuest'opera indaga la fragilità del segno, la bellezza dell'impermanenza, la poesia di ciò che non si afferma."
+      desc: `Trazioni leggere che sfiorano la carta come dita su una pelle mai toccata. Colori che si dissolvono prima ancora di essersi posati, impronte di un gesto così delicato che sembra non essere mai avvenuto. Ogni striscia è un respiro, ogni sfumatura è un ricordo che svanisce prima di definirsi, che sfugge alla memoria proprio nel momento in cui credevamo di averlo catturato. È un'opera che vive nel suo proprio dileguarsi, che trova la forza dell'opera nella caducità.
+
+Il bianco non è vuoto, ma spazio di possibilit: è il campo infinito dove ogni colore potrebbe apparire e non appare. È l'attesa che precede il suono, il silenzio che rende preziosa la voce. I colori si posano come polvere di farfalla, toccando la superficie senza mai pretenderla, senza mai pretendere di essere qualcosa di definitivo. Sono presenze leggere, fantasmi di pigmento che danzano sul bordo della percezione, troppo timidi per affermarsi, troppo presenti per essere ignorati.
+
+Quest'opera indaga la fragilità del segno, la bellezza dell'impermanenza, la poesia di ciò che non si afferma. Ogni tratto di pastello è una domanda senza risposta, un "forse" lasciato sospeso nell'aria. Non c'è conclusione, non c'è sintesi: c'è solo l'attimo, la sua brevità, la sua intensità disarmante. Il pastello, materiale così vulnerabile, così pronto a cedere, a sfaldarsi, a scomparire, diventa il medium perfetto per questa indagine sull'effimero.
+
+Ho lavorato a questa serie all'alba, quando la luce è ancora incerta e i colori sembrano più veri. Non ho mai corretto un tratto: ciò che è stato messo è stato messo per sempre, anche se per sempre significa solo qualche istante prima che la polvere di pigmento ceda alla gravità. In questa caduta, in questa resa, risiede la verità dell'opera.`
     },
     {
       image: "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1275.jpeg",
       title: "Tracce nel Vuoto",
       year: "2026",
       medium: "Acrilico su tela &middot; 10 000 &times; 10 000 pixel",
-      desc: "Linee che attraversano lo spazio senza meta, colori che si incrociano senza mai fermarsi. Ogni traccia è un istante, un gesto sospeso tra il prima e il dopo.\n\nIl bianco non è assenza, ma campo infinito dove ogni segno trova il suo posto. Le linee si sfiorano, si evitano, si seguono, come pensieri che non si completano.\n\nQuest'opera indaga la leggerezza del segno, la casualità apparente dell'incontro, la bellezza di ciò che non si conclude."
+      desc: `Linee che attraversano lo spazio senza meta, senza destinazione, senza promessa di arrivo. Colori che si incrociano senza mai fermarsi, che si salutano senza conoscersi, che si perdono senza rimpianto. Ogni traccia è un istante, un gesto sospeso tra il prima e il dopo, tra l'intenzione e il suo dimenticarsi. È un'opera che celebra il passaggio piuttosto che la permanenza, il transito piuttosto che la dimora.
+
+Il bianco non è assenza, ma campo infinito dove ogni segno trova il posto, anche se quel posto è sempre provvisorio, sempre in discussione. Le linee si sfiorano, si evitano, si seguono, come pensieri che non si completano, come conversazioni interrotte, come sguardi che si incrociano e subito distolgono. Non c'è incontro vero, c'è solo la promessa di un incontro, l'alone dell'incontro, l'eco dell'incontro che si dissolve prima di diventare parola.
+
+Quest'opera indaga la leggerezza del segno, la casualità apparente dell'incontro, la bellezza di ciò che non si conclude. Ogni linea comincia da qualche parte e finisce da un'altra, ma né l'inizio né la fine hanno un significato privilegiato: sono semplicemente i punti dove il gesto ha deciso di interrompersi, non dove la forma ha trovato la sua giustificazione. Il caso governa, ma è un caso così calcolato, così meditato, da sembrare destino.
+
+Ho lasciato che il caso guidasse la mia mano, ma è un caso preparato da anni di esercizio, di attenzione, di ascolto. Non si improvvisa il caos: si studia, si pratica, si aspetta che il momento sia maturo. Quando la linea ha cominciato a fluire, mi sono fatto schermo, non fonte: ho lasciato passare il gesto senza interferire, senza correggere, senza giudicare. In questa umiltà, in questa capacità di farmi canale piuttosto che creatore, risiede il valore autentico di quest'opera.
+
+Il vuoto del titolo non è negativo: è promessa. È lo spazio che accoglie ogni possibile traccia, la tela bianca che aspetta il prossimo gesto, la vita che continua oltre il confine del quadro.`
     }
   ];
 
@@ -798,7 +807,6 @@ footer p + p {
     window.scrollTo(0, 0);
   }
 
-  // Zoom Lightbox
   const lightbox = document.getElementById('lightbox');
   const zoomImg = document.getElementById('zoomImg');
   const closeBtn = document.getElementById('closeBtn');
@@ -896,7 +904,6 @@ footer p + p {
     }
   }, { passive: false });
 
-  // Discord webhook
   const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572918873068535858/3LfiE8a0rLqEbYuyfJjT_TEyd688wSNR2K39q3qg1DB0hH7h4zUbChdo3vvA_spXjMyz';
 
   document.getElementById('discordForm').addEventListener('submit', async function(e) {
