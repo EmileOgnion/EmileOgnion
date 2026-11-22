@@ -144,6 +144,14 @@ kv8Pm7aFD4Y</textarea>
 <button type="button" data-r="5">5x</button>
 <button type="button" data-r="6">6x</button>
 </div>
+<div class="ctl speed" id="ctrl">
+<span>全タイル一括操作</span>
+<button type="button" data-cmd="unMute">音ON</button>
+<button type="button" data-cmd="mute">音OFF</button>
+<button type="button" data-cmd="pauseVideo">一時停止</button>
+<button type="button" data-cmd="playVideo">再生</button>
+<label>音量 <input type="range" id="vol" min="0" max="100" value="30"></label>
+</div>
 <p class="note">YouTubeの埋め込みプレーヤーが公式に対応している速度は最大2倍です。3〜6倍は、命令を送ってもYouTube側に無視される（2倍止まりになる）可能性があります。</p>
 <p class="note">自動再生はミュートで始まります（ブラウザの制限）。100本同時はPCやスマホにかなり負荷がかかるので、重いときはタイル数を減らしてください。</p>
 <div id="wall" class="wall"></div>
@@ -199,6 +207,23 @@ kv8Pm7aFD4Y</textarea>
     rate=parseFloat(b.dataset.r);
     speedBox.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
     wall.querySelectorAll('iframe').forEach(applyRate);
+  });
+  var vol=30,volEl=document.getElementById('vol'),ctrl=document.getElementById('ctrl');
+  function send(f,func,args){
+    try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:args||[]}),'*');}catch(e){}
+  }
+  ctrl.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-cmd]');
+    if(!b)return;
+    var c=b.dataset.cmd;
+    wall.querySelectorAll('iframe').forEach(function(f){
+      if(c==='unMute')send(f,'setVolume',[vol]);
+      send(f,c);
+    });
+  });
+  volEl.addEventListener('input',function(){
+    vol=parseInt(volEl.value,10)||0;
+    wall.querySelectorAll('iframe').forEach(function(f){send(f,'setVolume',[vol]);});
   });
   document.getElementById('stop').addEventListener('click',clear);
 })();
