@@ -22,11 +22,16 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 #rom{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:clamp(24px,5vw,40px);letter-spacing:.1em;margin-top:6px;min-height:50px;word-break:break-all}
 #rom b{color:var(--cy);font-weight:700;text-shadow:0 0 14px rgba(126,231,255,.8)}
 #rom span{color:#9fb0d0}
+#ov>div{margin:auto}
+#vid{margin:20px auto 0;width:min(560px,86vw)}
+#vid .vf{aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+#vid iframe{width:100%;height:100%;border:0;display:block}
+#vid a{display:inline-block;margin-top:8px;color:var(--dim);font-size:13px}
 @keyframes jit{0%{transform:translate(0,0)}50%{transform:translate(1.5px,-1px)}}
 #rom span{display:inline-block;animation:jit .12s steps(1) infinite}
 #hint{color:var(--dim);font-size:14px;line-height:1.7;padding:8px 0}
 #fl{position:fixed;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 160px 40px var(--pk);transition:opacity .45s}
-#ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(6,9,25,.35),rgba(6,9,25,.88));text-align:center;padding:24px;cursor:pointer}
+#ov{position:fixed;inset:0;display:flex;overflow:auto;background:radial-gradient(ellipse at center,rgba(6,9,25,.35),rgba(6,9,25,.88));text-align:center;padding:24px;cursor:pointer}
 #ov.off{display:none}
 #ov h1{margin:0;font-size:clamp(44px,10vw,92px);letter-spacing:.14em;font-weight:700;text-shadow:0 0 40px rgba(126,231,255,.55)}
 #ov p{max-width:34em;margin:18px auto 0;line-height:1.9;color:#c5d4ee}
@@ -48,6 +53,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
     <h1 class="serif" id="ovt">イライラタイピング</h1>
     <p id="ovp">ミスタイプすると、そのワードは最初からやり直し。言葉は止まったり急加速したり、狙われると逃げます。たまにキー入力は無視され、画面も傾きます。ライフは3つ。</p>
     <dl id="res" hidden></dl>
+    <div id="vid" hidden></div>
     <div class="go" id="ovb">Enter キー、またはタップでスタート</div>
   </div>
 </div>
@@ -194,7 +200,7 @@ function key(c){
 function start(){
   words.slice().forEach(removeWord);
   score=0;combo=0;maxCombo=0;lives=3;hit=0;miss=0;time=0;spawnT=.2;target=null;roll=0;kickT=6;
-  running=true;over=false;$("ov").classList.add("off");$("hint").style.display="";hud();$("kb").focus();
+  running=true;over=false;$("vid").hidden=true;$("vid").innerHTML="";$("ov").classList.add("off");$("hint").style.display="";hud();$("kb").focus();
 }
 function end(){
   running=false;over=true;
@@ -204,6 +210,7 @@ function end(){
   $("ovp").textContent=isBest?"ベスト更新。なぜか悔しいよね？":"もう一回やるよね？";
   var r=$("res");r.hidden=false;
   r.innerHTML="<div><dt>スコア</dt><dd>"+score.toLocaleString("ja-JP")+"</dd></div><div><dt>ベスト</dt><dd>"+best.toLocaleString("ja-JP")+"</dd></div><div><dt>最大コンボ</dt><dd>"+maxCombo+"</dd></div><div><dt>正確率</dt><dd>"+acc+"%</dd></div>";
+  var v=$("vid");v.hidden=false;v.innerHTML='<div class="vf"><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vKq4KwcR9fQ?si=dAnoJtj2MmGn_g6w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><a href="https://www.youtube.com/watch?v=vKq4KwcR9fQ" target="_blank" rel="noopener">動画が表示されない場合はこちら</a>';
   $("ovb").textContent="Enter キー、またはタップでもう一度";
   $("ov").classList.remove("off");target=null;hud();
 }
@@ -220,6 +227,7 @@ $("kb").addEventListener("input",function(e){
   var v=this.value.toLowerCase();this.value="";
   for(var i=0;i<v.length;i++)if(/[a-z]/.test(v[i]))key(v[i]);
 });
+$("vid").addEventListener("click",function(e){e.stopPropagation()});
 $("ov").addEventListener("click",function(){if(!running)start()});
 
 /* ---- loop ---- */
