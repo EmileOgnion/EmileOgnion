@@ -210,7 +210,7 @@ function end(){
   $("ovp").textContent=isBest?"ベスト更新。なぜか悔しいよね？":"もう一回やるよね？";
   var r=$("res");r.hidden=false;
   r.innerHTML="<div><dt>スコア</dt><dd>"+score.toLocaleString("ja-JP")+"</dd></div><div><dt>ベスト</dt><dd>"+best.toLocaleString("ja-JP")+"</dd></div><div><dt>最大コンボ</dt><dd>"+maxCombo+"</dd></div><div><dt>正確率</dt><dd>"+acc+"%</dd></div>";
-  var v=$("vid");v.hidden=false;v.innerHTML='<div class="vf"><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vKq4KwcR9fQ?si=dAnoJtj2MmGn_g6w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><a href="https://www.youtube.com/watch?v=vKq4KwcR9fQ" target="_blank" rel="noopener">動画が表示されない場合はこちら</a>';
+  var v=$("vid");v.hidden=false;v.innerHTML='<div class="vf"><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vKq4KwcR9fQ?autoplay=1&si=dAnoJtj2MmGn_g6w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><a href="https://www.youtube.com/watch?v=vKq4KwcR9fQ" target="_blank" rel="noopener">動画が表示されない場合はこちら</a>';
   $("ovb").textContent="Enter キー、またはタップでもう一度";
   $("ov").classList.remove("off");target=null;hud();
 }
