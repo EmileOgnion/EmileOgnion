@@ -31,6 +31,8 @@ textarea{width:100%;font:inherit;font-size:.9rem;padding:8px;border:1px solid va
 button{font:inherit;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:var(--fg);color:var(--bg);cursor:pointer}
 button.sub{background:transparent;color:var(--fg)}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin:12px 0 20px}
+.speed button{padding:4px 12px;background:transparent;color:var(--fg)}
+.speed button.on{background:var(--a);border-color:var(--a);color:#fff}
 footer{font-size:.82rem;color:var(--sub)}
 footer a{color:inherit}
 </style>
@@ -131,6 +133,18 @@ kv8Pm7aFD4Y</textarea>
 <button id="stop" type="button" class="sub">全部止める</button>
 <span id="status" style="color:var(--sub);font-size:.88rem"></span>
 </div>
+<div class="ctl speed" id="speed">
+<span>全タイルの再生速度</span>
+<button type="button" data-r="0.5">0.5x</button>
+<button type="button" data-r="1" class="on">1x</button>
+<button type="button" data-r="1.5">1.5x</button>
+<button type="button" data-r="2">2x</button>
+<button type="button" data-r="3">3x</button>
+<button type="button" data-r="4">4x</button>
+<button type="button" data-r="5">5x</button>
+<button type="button" data-r="6">6x</button>
+</div>
+<p class="note">YouTubeの埋め込みプレーヤーが公式に対応している速度は最大2倍です。3〜6倍は、命令を送ってもYouTube側に無視される（2倍止まりになる）可能性があります。</p>
 <p class="note">自動再生はミュートで始まります（ブラウザの制限）。100本同時はPCやスマホにかなり負荷がかかるので、重いときはタイル数を減らしてください。</p>
 <div id="wall" class="wall"></div>
 </section>
@@ -161,15 +175,30 @@ kv8Pm7aFD4Y</textarea>
         var id=ids[i%ids.length];
         var d=document.createElement('div');d.className='video';
         var f=document.createElement('iframe');
-        f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&loop=1&playlist='+id+'&playsinline=1';
+        f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&loop=1&playlist='+id+'&playsinline=1&enablejsapi=1';
         f.title='YouTube video player '+(i+1);
         f.allow='autoplay; encrypted-media; picture-in-picture';
         f.referrerPolicy='strict-origin-when-cross-origin';
         f.allowFullscreen=true;
+        f.addEventListener('load',function(){
+          try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*');}catch(e){}
+          if(rate!==1){setTimeout(function(){applyRate(f);},600);setTimeout(function(){applyRate(f);},2000);}
+        });
         d.appendChild(f);wall.appendChild(d);
         if(i===n-1)status.textContent=n+'個を再生中';
       },i*80));
     }
+  });
+  var rate=1,speedBox=document.getElementById('speed');
+  function applyRate(f){
+    try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackRate',args:[rate]}),'*');}catch(e){}
+  }
+  speedBox.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-r]');
+    if(!b)return;
+    rate=parseFloat(b.dataset.r);
+    speedBox.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+    wall.querySelectorAll('iframe').forEach(applyRate);
   });
   document.getElementById('stop').addEventListener('click',clear);
 })();
