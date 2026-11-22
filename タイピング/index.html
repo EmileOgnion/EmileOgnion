@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>流星タイピング</title>
+<style>
+:root{color-scheme:dark;--bg:#060919;--ink:#eaf6ff;--dim:#8fa3c4;--cy:#7ee7ff;--pk:#ff5c93;--gd:#ffd479;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);overflow:hidden;font-family:system-ui,"Hiragino Sans","Yu Gothic UI","Noto Sans JP",sans-serif}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.serif{font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+#hud{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);display:flex;justify-content:space-between;align-items:flex-start;padding:18px 24px;pointer-events:none}
+#hud div{min-width:0}
+#sc{font-size:34px;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+#tm{color:var(--dim);font-size:13px;margin-top:2px}
+#cb{text-align:center;font-size:28px;font-weight:700;color:var(--gd);min-height:34px;transition:transform .12s}
+#cb small{display:block;font-size:12px;font-weight:400;color:var(--dim)}
+#lv{font-size:24px;letter-spacing:.12em;color:var(--pk);text-align:right}
+#lv i{font-style:normal;opacity:.2}
+#stage{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(760px,92vw);text-align:center;padding:16px 20px;background:rgba(8,14,40,.72);border:1px solid rgba(126,231,255,.35);border-radius:18px;backdrop-filter:blur(8px);pointer-events:none}
+#kana{font-size:26px;min-height:34px;color:var(--ink)}
+#rom{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:clamp(24px,5vw,40px);letter-spacing:.1em;margin-top:6px;min-height:50px;word-break:break-all}
+#rom b{color:var(--cy);font-weight:700;text-shadow:0 0 14px rgba(126,231,255,.8)}
+#rom span{color:#9fb0d0}
+#hint{color:var(--dim);font-size:14px;line-height:1.7;padding:8px 0}
+#fl{position:fixed;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 160px 40px var(--pk);transition:opacity .45s}
+#ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(6,9,25,.35),rgba(6,9,25,.88));text-align:center;padding:24px;cursor:pointer}
+#ov.off{display:none}
+#ov h1{margin:0;font-size:clamp(44px,10vw,92px);letter-spacing:.14em;font-weight:700;text-shadow:0 0 40px rgba(126,231,255,.55)}
+#ov p{max-width:34em;margin:18px auto 0;line-height:1.9;color:#c5d4ee}
+#ov .go{display:inline-block;margin-top:26px;padding:14px 34px;border:1px solid var(--cy);border-radius:999px;color:var(--cy);font-size:18px;letter-spacing:.08em;background:rgba(126,231,255,.08)}
+#ov .go:focus-visible{outline:3px solid var(--gd);outline-offset:3px}
+#res{margin:20px auto 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px;max-width:360px;text-align:left}
+#res dt{color:var(--dim);font-size:13px}#res dd{margin:0 0 4px;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+#kb{position:fixed;left:-100px;top:0;width:10px;opacity:0}
+@media (max-width:560px){#hud{padding:12px 14px}#sc{font-size:26px}#cb{font-size:22px}#lv{font-size:18px}}
+@media (prefers-reduced-motion:reduce){#fl{transition:none}}
+</style>
+</head>
+<body>
+<div id="hud"><div><div id="sc">0</div><div id="tm">0.0 秒</div></div><div id="cb"></div><div id="lv"></div></div>
+<div id="fl"></div>
+<div id="stage"><div id="kana" class="serif"></div><div id="rom"></div><div id="hint">降ってくる言葉の最初の1文字を打つと、そのワードを狙えます。<br>ローマ字入力（si / shi、ji / zi などの表記ゆれにも対応）</div></div>
+<div id="ov" tabindex="0" role="button" aria-label="ゲームを開始">
+  <div>
+    <h1 class="serif" id="ovt">流星タイピング</h1>
+    <p id="ovp">宇宙のトンネルを飛ぶ言葉を、ローマ字で撃ち落とそう。画面の手前まで届くとライフが1つ減ります。ライフは5つ。</p>
+    <dl id="res" hidden></dl>
+    <div class="go" id="ovb">Enter キー、またはタップでスタート</div>
+  </div>
+</div>
+<input id="kb" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="入力">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+/* ---- romaji table ---- */
+var T={};
+("あ:a,い:i,う:u,え:e,お:o,か:ka,き:ki,く:ku,け:ke,こ:ko,さ:sa,し:shi|si,す:su,せ:se,そ:so,た:ta,ち:chi|ti,つ:tsu|tu,て:te,と:to,な:na,に:ni,ぬ:nu,ね:ne,の:no,は:ha,ひ:hi,ふ:fu|hu,へ:he,ほ:ho,ま:ma,み:mi,む:mu,め:me,も:mo,や:ya,ゆ:yu,よ:yo,ら:ra,り:ri,る:ru,れ:re,ろ:ro,わ:wa,が:ga,ぎ:gi,ぐ:gu,げ:ge,ご:go,ざ:za,じ:ji|zi,ず:zu,ぜ:ze,ぞ:zo,だ:da,で:de,ど:do,ば:ba,び:bi,ぶ:bu,べ:be,ぼ:bo,しゃ:sha|sya,しゅ:shu|syu,じゃ:ja|jya|zya,りゅ:ryu,ちゅ:chu|tyu|cyu,ん:nn|n").split(",").forEach(function(s){var p=s.split(":");T[p[0]]=p[1].split("|")});
+var WORDS=[["桜","さくら"],["寿司","すし"],["忍者","にんじゃ"],["侍","さむらい"],["夕焼け","ゆうやけ"],["花火","はなび"],["流星","りゅうせい"],["星空","ほしぞら"],["電車","でんしゃ"],["音楽","おんがく"],["宇宙","うちゅう"],["未来","みらい"],["光","ひかり"],["風","かぜ"],["海","うみ"],["銀河","ぎんが"],["彗星","すいせい"],["時空","じくう"],["夢","ゆめ"],["神話","しんわ"],["虹色","にじいろ"],["桜吹雪","さくらふぶき"],["天の川","あまのがわ"],["蛍","ほたる"]];
+function tok(k){var a=[],i=0;while(i<k.length){var two=k.slice(i,i+2);if(T[two]){a.push({k:two,o:T[two]});i+=2}else{a.push({k:k[i],o:T[k[i]]});i++}}return a}
+
+/* returns 0 miss, 1 ok, 2 word complete */
+function typeChar(w,c){
+  var st=w.st;
+  for(;;){
+    var t=w.tokens[st.i];
+    if(!t)return 0;
+    if(t.k==="ん"&&st.p==="n"&&"aiueoyn".indexOf(c)<0){st.i++;st.p="";continue}
+    var q=st.p+c;
+    var ok=t.o.filter(function(o){return o.indexOf(q)===0});
+    if(!ok.length)return 0;
+    st.p=q;st.typed+=c;
+    if(t.o.indexOf(q)>=0&&!(t.k==="ん"&&q==="n")){st.i++;st.p=""}
+    return st.i>=w.tokens.length?2:1;
+  }
+}
+function rest(w){
+  var st=w.st,s="";
+  if(st.i<w.tokens.length){var t=w.tokens[st.i];var o=t.o.filter(function(x){return x.indexOf(st.p)===0})[0]||t.o[0];s+=o.slice(st.p.length)}
+  for(var j=st.i+1;j<w.tokens.length;j++)s+=w.tokens[j].o[0];
+  return s;
+}
+
+/* ---- three.js scene ---- */
+var R=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+R.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+R.outputEncoding=THREE.sRGBEncoding;
+R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.15;
+document.body.insertBefore(R.domElement,document.body.firstChild);
+var scene=new THREE.Scene();
+scene.background=new THREE.Color(0x060919);
+scene.fog=new THREE.FogExp2(0x060919,0.011);
+var cam=new THREE.PerspectiveCamera(65,1,.1,400);cam.position.set(0,0,10);
+function resize(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener("resize",resize);resize();
+
+var RING_N=28,GAP=6,SPAN=RING_N*GAP,rings=[];
+var rg=new THREE.TorusGeometry(15,.08,8,128);
+for(var i=0;i<RING_N;i++){var m=new THREE.Mesh(rg,new THREE.MeshBasicMaterial({color:0x4fb8ff,transparent:true,opacity:.75}));m.position.z=-i*GAP+8;scene.add(m);rings.push(m)}
+var lg=new THREE.Group();
+for(var k=0;k<16;k++){var a=k/16*Math.PI*2,g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(Math.cos(a)*15,Math.sin(a)*15,12),new THREE.Vector3(Math.cos(a)*15,Math.sin(a)*15,-SPAN)]);lg.add(new THREE.Line(g,new THREE.LineBasicMaterial({color:0x2b5cff,transparent:true,opacity:.28})))}
+scene.add(lg);
+
+/* streaks */
+var SN=1600,sp=new Float32Array(SN*3);
+for(var i=0;i<SN;i++){var a=Math.random()*6.283,r=3+Math.random()*11.5;sp[i*3]=Math.cos(a)*r;sp[i*3+1]=Math.sin(a)*r;sp[i*3+2]=-Math.random()*SPAN+12}
+var sg=new THREE.BufferGeometry();sg.setAttribute("position",new THREE.BufferAttribute(sp,3));
+var streaks=new THREE.Points(sg,new THREE.PointsMaterial({color:0xbfeaff,size:.16,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false}));
+scene.add(streaks);
+
+/* distant core */
+var core=new THREE.Mesh(new THREE.IcosahedronGeometry(15,2),new THREE.MeshBasicMaterial({color:0x6a7dff,wireframe:true,transparent:true,opacity:.5,fog:false}));
+core.position.z=-SPAN-20;scene.add(core);
+var core2=new THREE.Mesh(new THREE.IcosahedronGeometry(9,1),new THREE.MeshBasicMaterial({color:0xff7ac8,wireframe:true,transparent:true,opacity:.6,fog:false}));
+core2.position.z=-SPAN-20;scene.add(core2);
+
+/* ---- game state ---- */
+var words=[],target=null,bursts=[],running=false,over=false;
+var score,combo,maxCombo,lives,hit,miss,time,spawnT,shake=0,tt=0,hue=.55;
+var best=0;try{best=+localStorage.getItem("ryusei-best")||0}catch(e){}
+
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function draw(w,active){
+  var g=w.cv.getContext("2d");g.clearRect(0,0,768,256);
+  g.shadowColor=active?"#7ee7ff":"#3a6cff";g.shadowBlur=active?40:18;
+  g.fillStyle=active?"rgba(14,40,74,.9)":"rgba(10,16,44,.8)";rr(g,28,28,712,200,34);g.fill();
+  g.shadowBlur=0;g.lineWidth=active?6:3;g.strokeStyle=active?"#7ee7ff":"rgba(126,160,255,.7)";g.stroke();
+  g.textAlign="center";g.textBaseline="middle";g.fillStyle="#fff";
+  g.font='700 112px "Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif';g.fillText(w.d,384,100);
+  g.font='500 40px "Hiragino Sans","Yu Gothic UI","Noto Sans JP",sans-serif';g.fillStyle=active?"#7ee7ff":"#9db2e0";g.fillText(w.k,384,189);
+  w.tex.needsUpdate=true;
+}
+function spawn(){
+  var p=WORDS[Math.random()*WORDS.length|0];
+  var cv=document.createElement("canvas");cv.width=768;cv.height=256;
+  var tex=new THREE.CanvasTexture(cv);tex.encoding=THREE.sRGBEncoding;tex.anisotropy=8;
+  var spr=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,toneMapped:false}));
+  spr.scale.set(9,3,1);
+  var by=-3.5+Math.random()*7;
+  spr.position.set(-8+Math.random()*16,by,-95);
+  var w={d:p[0],k:p[1],tokens:tok(p[1]),st:{i:0,p:"",typed:""},spr:spr,cv:cv,tex:tex,by:by,seed:Math.random()*6};
+  draw(w,false);scene.add(spr);words.push(w);
+}
+function removeWord(w){
+  scene.remove(w.spr);w.tex.dispose();w.spr.material.dispose();
+  words.splice(words.indexOf(w),1);
+  if(target===w){target=null;hud()}
+}
+function burst(pos,color){
+  var n=80,p=new Float32Array(n*3),v=[];
+  for(var i=0;i<n;i++){p[i*3]=pos.x;p[i*3+1]=pos.y;p[i*3+2]=pos.z;v.push(new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize().multiplyScalar(4+Math.random()*11))}
+  var g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(p,3));
+  var m=new THREE.PointsMaterial({color:color,size:.4,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false});
+  var pts=new THREE.Points(g,m);scene.add(pts);bursts.push({pts:pts,v:v,life:1});
+}
+function flash(){var f=$("fl");f.style.opacity=1;setTimeout(function(){f.style.opacity=0},90)}
+function hud(){
+  $("sc").textContent=score.toLocaleString("ja-JP");
+  $("cb").innerHTML=combo>1?combo+"<small>コンボ</small>":"";
+  var l="";for(var i=0;i<5;i++)l+=i<lives?"♥":"<i>♥</i>";$("lv").innerHTML=l;
+  var h=$("hint");
+  if(target){
+    h.style.display="none";$("kana").textContent=target.k;
+    $("rom").innerHTML="<b>"+target.st.typed+"</b><span>"+rest(target)+"</span>";
+  }else{
+    $("kana").textContent="";$("rom").innerHTML="";h.style.display=running?"":"none";
+  }
+}
+function key(c){
+  if(!running)return;
+  var r=0;
+  if(target){r=typeChar(target,c)}
+  else{
+    var cand=words.slice().sort(function(a,b){return b.spr.position.z-a.spr.position.z});
+    for(var i=0;i<cand.length;i++){r=typeChar(cand[i],c);if(r){target=cand[i];draw(target,true);break}}
+  }
+  if(!r){miss++;combo=0;shake=Math.max(shake,.35);hud();return}
+  hit++;combo++;if(combo>maxCombo)maxCombo=combo;
+  score+=Math.round(10*(1+Math.floor(combo/10)*.5));
+  if(r===2){
+    var w=target;score+=w.k.length*40;
+    burst(w.spr.position.clone(),0x7ee7ff);burst(w.spr.position.clone(),0xffd479);
+    removeWord(w);
+  }
+  hud();
+}
+function start(){
+  words.slice().forEach(removeWord);
+  score=0;combo=0;maxCombo=0;lives=5;hit=0;miss=0;time=0;spawnT=.2;target=null;
+  running=true;over=false;$("ov").classList.add("off");$("hint").style.display="";hud();$("kb").focus();
+}
+function end(){
+  running=false;over=true;
+  var isBest=score>best;if(isBest){best=score;try{localStorage.setItem("ryusei-best",String(best))}catch(e){}}
+  var acc=hit+miss?Math.round(hit/(hit+miss)*100):0;
+  $("ovt").textContent="ゲームオーバー";
+  $("ovp").textContent=isBest?"ベストスコアを更新しました。":"もう一度挑戦して、ベストを超えよう。";
+  var r=$("res");r.hidden=false;
+  r.innerHTML="<div><dt>スコア</dt><dd>"+score.toLocaleString("ja-JP")+"</dd></div><div><dt>ベスト</dt><dd>"+best.toLocaleString("ja-JP")+"</dd></div><div><dt>最大コンボ</dt><dd>"+maxCombo+"</dd></div><div><dt>正確率</dt><dd>"+acc+"%</dd></div>";
+  $("ovb").textContent="Enter キー、またはタップでもう一度";
+  $("ov").classList.remove("off");target=null;hud();
+}
+function spd(){return Math.min(8+time*.14,24)}
+
+/* ---- input ---- */
+addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&!running){e.preventDefault();start();return}
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.key.length===1){var c=e.key.toLowerCase();if(/[a-z']/.test(c)){e.preventDefault();key(c)}}
+});
+$("kb").addEventListener("input",function(e){
+  var v=this.value.toLowerCase();this.value="";
+  for(var i=0;i<v.length;i++)if(/[a-z]/.test(v[i]))key(v[i]);
+});
+$("ov").addEventListener("click",function(){if(!running)start()});
+
+/* ---- loop ---- */
+var last=performance.now(),tmp=new THREE.Color();
+function frame(now){
+  requestAnimationFrame(frame);
+  var dt=Math.min((now-last)/1000,.05);last=now;tt+=dt;
+  var flow=running?18+spd():12;
+  hue+=((.55+Math.min(combo,40)*.006)-hue)*Math.min(1,dt*2);
+  for(var i=0;i<rings.length;i++){
+    var m=rings[i];m.position.z+=flow*dt;if(m.position.z>12)m.position.z-=SPAN;
+    m.material.color.setHSL(hue%1,.85,.6);
+  }
+  var pa=sg.attributes.position.array;
+  for(var i=0;i<SN;i++){var z=pa[i*3+2]+flow*dt*1.6;if(z>12)z-=SPAN;pa[i*3+2]=z}
+  sg.attributes.position.needsUpdate=true;
+  core.rotation.y+=dt*.12;core.rotation.x+=dt*.05;core2.rotation.y-=dt*.2;core2.rotation.z+=dt*.1;
+  if(running){
+    time+=dt;spawnT-=dt;
+    if(spawnT<=0&&words.length<7){spawn();spawnT=Math.max(.8,2.4-time*.016)}
+    var s=spd();
+    for(var i=words.length-1;i>=0;i--){
+      var w=words[i];w.spr.position.z+=s*dt;
+      w.spr.position.y=w.by+Math.sin(tt*1.2+w.seed)*.5;
+      if(w.spr.position.z>2){
+        lives--;combo=0;shake=1;flash();burst(w.spr.position.clone(),0xff5c93);removeWord(w);hud();
+        if(lives<=0){end();break}
+      }
+    }
+    $("tm").textContent=time.toFixed(1)+" 秒";
+  }
+  for(var i=bursts.length-1;i>=0;i--){
+    var b=bursts[i],p=b.pts.geometry.attributes.position.array;
+    for(var j=0;j<b.v.length;j++){var v=b.v[j];p[j*3]+=v.x*dt;p[j*3+1]+=v.y*dt;p[j*3+2]+=v.z*dt;v.multiplyScalar(.97)}
+    b.pts.geometry.attributes.position.needsUpdate=true;
+    b.life-=dt*1.3;b.pts.material.opacity=Math.max(b.life,0);
+    if(b.life<=0){scene.remove(b.pts);b.pts.geometry.dispose();b.pts.material.dispose();bursts.splice(i,1)}
+  }
+  if(!reduce){
+    cam.position.x=(Math.random()-.5)*shake*.7;cam.position.y=(Math.random()-.5)*shake*.7;
+    cam.rotation.z=Math.sin(tt*.3)*.03;
+  }
+  shake=Math.max(0,shake-dt*2.5);
+  R.render(scene,cam);
+}
+score=0;combo=0;lives=5;hud();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
