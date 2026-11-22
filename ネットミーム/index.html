@@ -33,6 +33,13 @@ button.sub{background:transparent;color:var(--fg)}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin:12px 0 20px}
 .speed button{padding:4px 12px;background:transparent;color:var(--fg)}
 .speed button.on{background:var(--a);border-color:var(--a);color:#fff}
+#fsbar{display:none}
+#stage:fullscreen{background:#000;display:flex;align-items:center;justify-content:center;width:100vw;height:100vh;overflow:hidden}
+#stage:fullscreen .wall{margin:0;gap:0;width:100%}
+#stage:fullscreen .video{border-radius:0}
+#stage:fullscreen #fsbar{display:flex;gap:6px;position:fixed;top:8px;right:8px;z-index:10;opacity:.25;transition:opacity .2s}
+#stage:fullscreen #fsbar:hover{opacity:1}
+#fsbar button{padding:3px 10px;font-size:.8rem}
 footer{font-size:.82rem;color:var(--sub)}
 footer a{color:inherit}
 </style>
@@ -131,6 +138,7 @@ kv8Pm7aFD4Y</textarea>
 <label>タイル数 <input type="number" id="count" value="100" min="1" max="200"></label>
 <button id="go" type="button">生成して再生</button>
 <button id="stop" type="button" class="sub">全部止める</button>
+<button id="fs" type="button">全画面で見る</button>
 <span id="status" style="color:var(--sub);font-size:.88rem"></span>
 </div>
 <div class="ctl speed" id="speed">
@@ -154,7 +162,16 @@ kv8Pm7aFD4Y</textarea>
 </div>
 <p class="note">YouTubeの埋め込みプレーヤーが公式に対応している速度は最大2倍です。3〜6倍は、命令を送ってもYouTube側に無視される（2倍止まりになる）可能性があります。</p>
 <p class="note">自動再生はミュートで始まります（ブラウザの制限）。100本同時はPCやスマホにかなり負荷がかかるので、重いときはタイル数を減らしてください。</p>
+<div id="stage">
+<div id="fsbar">
+<button type="button" data-cmd="unMute">音ON</button>
+<button type="button" data-cmd="mute">音OFF</button>
+<button type="button" data-cmd="pauseVideo">停止</button>
+<button type="button" data-cmd="playVideo">再生</button>
+<button type="button" id="fsexit" class="sub" style="background:#222;color:#fff">終了</button>
+</div>
 <div id="wall" class="wall"></div>
+</div>
 </section>
 
 <footer>
@@ -212,7 +229,7 @@ kv8Pm7aFD4Y</textarea>
   function send(f,func,args){
     try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:args||[]}),'*');}catch(e){}
   }
-  ctrl.addEventListener('click',function(e){
+  document.addEventListener('click',function(e){
     var b=e.target.closest('button[data-cmd]');
     if(!b)return;
     var c=b.dataset.cmd;
@@ -224,6 +241,32 @@ kv8Pm7aFD4Y</textarea>
   volEl.addEventListener('input',function(){
     vol=parseInt(volEl.value,10)||0;
     wall.querySelectorAll('iframe').forEach(function(f){send(f,'setVolume',[vol]);});
+  });
+  var stage=document.getElementById('stage');
+  function fit(){
+    var n=wall.children.length;
+    if(!n)return;
+    var W=window.innerWidth,H=window.innerHeight,cols=n;
+    for(var c=1;c<=n;c++){
+      if(Math.ceil(n/c)*(W/c*9/16)<=H){cols=c;break;}
+    }
+    wall.style.gridTemplateColumns='repeat('+cols+',1fr)';
+  }
+  function inFs(){return (document.fullscreenElement||document.webkitFullscreenElement)===stage;}
+  function onFsChange(){
+    if(inFs()){fit();}else{wall.style.gridTemplateColumns='';}
+  }
+  document.addEventListener('fullscreenchange',onFsChange);
+  document.addEventListener('webkitfullscreenchange',onFsChange);
+  window.addEventListener('resize',function(){if(inFs())fit();});
+  document.getElementById('fs').addEventListener('click',function(){
+    if(!wall.children.length){status.textContent='先に「生成して再生」を押してください';return;}
+    var req=stage.requestFullscreen||stage.webkitRequestFullscreen;
+    if(req){req.call(stage);}else{status.textContent='このブラウザは全画面表示に対応していません';}
+  });
+  document.getElementById('fsexit').addEventListener('click',function(){
+    var ex=document.exitFullscreen||document.webkitExitFullscreen;
+    if(ex)ex.call(document);
   });
   document.getElementById('stop').addEventListener('click',clear);
 })();
