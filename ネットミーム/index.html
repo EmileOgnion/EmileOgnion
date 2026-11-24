@@ -40,6 +40,13 @@ button.sub{background:transparent;color:var(--fg)}
 #stage:fullscreen #fsbar{display:flex;gap:6px;position:fixed;top:8px;right:8px;z-index:10;opacity:.25;transition:opacity .2s}
 #stage:fullscreen #fsbar:hover{opacity:1}
 #fsbar button{padding:3px 10px;font-size:.8rem}
+#sf{display:none;position:fixed;inset:0;z-index:20;background:#000}
+#sf.open{display:block}
+#sfbar{position:absolute;top:10px;right:12px;z-index:2;display:flex;gap:6px}
+#sfbar button{padding:4px 12px;background:rgba(0,0,0,.6);color:#fff;border-color:#555}
+#sfscroll{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;outline:none}
+.sfi{height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center}
+.sfi iframe{height:100%;aspect-ratio:9/16;max-width:100%;border:0;background:#111}
 footer{font-size:.82rem;color:var(--sub)}
 footer a{color:inherit}
 </style>
@@ -139,6 +146,7 @@ kv8Pm7aFD4Y</textarea>
 <button id="go" type="button">生成して再生</button>
 <button id="stop" type="button" class="sub">全部止める</button>
 <button id="fs" type="button">全画面で見る</button>
+<button id="sfbtn" type="button">スクロール表示</button>
 <span id="status" style="color:var(--sub);font-size:.88rem"></span>
 </div>
 <div class="ctl speed" id="speed">
@@ -162,6 +170,7 @@ kv8Pm7aFD4Y</textarea>
 </div>
 <p class="note">YouTubeの埋め込みプレーヤーが公式に対応している速度は最大2倍です。3〜6倍は、命令を送ってもYouTube側に無視される（2倍止まりになる）可能性があります。</p>
 <p class="note">自動再生はミュートで始まります（ブラウザの制限）。100本同時はPCやスマホにかなり負荷がかかるので、重いときはタイル数を減らしてください。</p>
+<p class="note">「スクロール表示」は、入力欄の動画をシャッフルして、縦にスクロールしながら1本ずつ流します（最後まで行くと、もう一度シャッフルして続きます）。</p>
 <div id="stage">
 <div id="fsbar">
 <button type="button" data-cmd="unMute">音ON</button>
@@ -171,6 +180,13 @@ kv8Pm7aFD4Y</textarea>
 <button type="button" id="fsexit" class="sub" style="background:#222;color:#fff">終了</button>
 </div>
 <div id="wall" class="wall"></div>
+<div id="sf" aria-hidden="true">
+<div id="sfbar">
+<button type="button" id="sfsnd">音ON</button>
+<button type="button" id="sfx">×</button>
+</div>
+<div id="sfscroll" tabindex="0"></div>
+</div>
 </div>
 </section>
 
@@ -276,6 +292,91 @@ kv8Pm7aFD4Y</textarea>
       e.preventDefault();
       window.location.href='https://emileognion.github.io/EmileOgnion/%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0/';
     }
+  });
+  var sf=document.getElementById('sf'),sfs=document.getElementById('sfscroll'),sfSnd=document.getElementById('sfsnd');
+  var sfIds=[],sfActive=null,sfSound=false,sfIO=null,sfLoad=null;
+  function sfPlay(f){
+    send(f,'playVideo');
+    send(f,sfSound?'unMute':'mute');
+    if(sfSound)send(f,'setVolume',[100]);
+  }
+  function sfMake(d){
+    if(d.firstChild)return;
+    var id=d.dataset.id,f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+id+'?mute=1&loop=1&playlist='+id+'&playsinline=1&enablejsapi=1';
+    f.title='YouTube short';
+    f.allow='autoplay; encrypted-media; picture-in-picture';
+    f.referrerPolicy='strict-origin-when-cross-origin';
+    f.allowFullscreen=true;
+    f.addEventListener('load',function(){
+      try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*');}catch(e){}
+      if(sfActive===d){setTimeout(function(){sfPlay(f);},500);}
+    });
+    d.appendChild(f);
+  }
+  function sfShuffle(a){
+    a=a.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;
+    }
+    return a;
+  }
+  function sfAddRound(){sfAddList();}
+  function sfAddList(){
+    var round=sfShuffle(sfIds),last=sfs.lastElementChild;
+    if(last&&round.length>1&&round[0]===last.dataset.id){
+      var k=round.pop();round.unshift(k);
+    }
+    round.forEach(function(id){
+      var d=document.createElement('div');
+      d.className='sfi';d.dataset.id=id;
+      sfs.appendChild(d);
+      sfLoad.observe(d);sfIO.observe(d);
+    });
+  }
+  function sfSetActive(d){
+    if(sfActive===d)return;
+    if(sfActive&&sfActive.firstChild)send(sfActive.firstChild,'pauseVideo');
+    sfActive=d;
+    sfMake(d);
+    if(d.firstChild)sfPlay(d.firstChild);
+    var kids=sfs.children;
+    if(Array.prototype.indexOf.call(kids,d)>=kids.length-3)sfAddRound();
+  }
+  function sfOpen(){
+    var ids=parse(document.getElementById('ids').value);
+    if(!ids.length){status.textContent='有効なURL/IDがありません';return;}
+    sfIds=ids;sfActive=null;sfs.innerHTML='';
+    if(sfIO)sfIO.disconnect();
+    if(sfLoad)sfLoad.disconnect();
+    sfLoad=new IntersectionObserver(function(es){
+      es.forEach(function(en){if(en.isIntersecting)sfMake(en.target);});
+    },{root:sfs,rootMargin:'100% 0px'});
+    sfIO=new IntersectionObserver(function(es){
+      es.forEach(function(en){if(en.isIntersecting)sfSetActive(en.target);});
+    },{root:sfs,threshold:0.6});
+    wall.querySelectorAll('iframe').forEach(function(f){send(f,'pauseVideo');});
+    sf.classList.add('open');sf.setAttribute('aria-hidden','false');
+    sfAddRound();
+    sfs.scrollTop=0;sfs.focus();
+  }
+  function sfClose(){
+    if(sfActive&&sfActive.firstChild)send(sfActive.firstChild,'pauseVideo');
+    if(sfIO)sfIO.disconnect();
+    if(sfLoad)sfLoad.disconnect();
+    sfActive=null;sfs.innerHTML='';
+    sf.classList.remove('open');sf.setAttribute('aria-hidden','true');
+    wall.querySelectorAll('iframe').forEach(function(f){send(f,'playVideo');});
+  }
+  document.getElementById('sfbtn').addEventListener('click',sfOpen);
+  document.getElementById('sfx').addEventListener('click',sfClose);
+  sfSnd.addEventListener('click',function(){
+    sfSound=!sfSound;
+    sfSnd.textContent=sfSound?'音OFF':'音ON';
+    if(sfActive&&sfActive.firstChild)sfPlay(sfActive.firstChild);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&sf.classList.contains('open'))sfClose();
   });
   document.getElementById('stop').addEventListener('click',clear);
 })();
