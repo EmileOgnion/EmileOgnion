@@ -156,6 +156,14 @@ footer p+p{margin-top:0.5rem}
 <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 <header>
   <div class="logo">Émile Ognion<span>Portfolio Artistico</span></div>
+  <div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn" onclick="toggleLang()" aria-label="Cambia lingua" aria-expanded="false" id="langBtn">IT ▾</button>
+    <div class="lang-dropdown" id="langDropdown" role="menu">
+      <a href="/it/" role="menuitem" data-lang="it">🇮🇹 Italiano</a>
+      <a href="/en/" role="menuitem" data-lang="en">🇬🇧 English</a>
+      <a href="/ja/" role="menuitem" data-lang="ja">🇯🇵 日本語</a>
+    </div>
+  </div>
   <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
     <span class="bar"></span>
     <span class="bar"></span>
