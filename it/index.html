@@ -302,6 +302,7 @@ footer p+p{margin-top:0.5rem}
 <button class="lightbox-close" id="closeBtn" onclick="closeZoomBtn()">&times;</button><button class="zoom-reset" id="zoomReset" onclick="resetZoom()" title="Reset zoom">⌖</button>
 <div class="zoom-level" id="zoomLevel">100%</div>
 <div class="watermark">&copy; Émile Ognion</div>
+<button class="to-top" id="toTop" onclick="scrollToTop()" aria-label="Torna su">↑</button>
 <footer>
   <p>Tutti i diritti riservati &middot; Riproduzione vietata senza autorizzazione</p>
   <p style="font-size:0.65rem;color:rgba(255,255,255,0.12);">È vietata la riproduzione, il download o qualsiasi altro uso non autorizzato. Ogni atto ad essi equiparato è altresì proibito.</p>
@@ -443,7 +444,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.s
 const keyboardHint=document.getElementById('keyboardHint');
 let kbTimer;document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft','Escape'].includes(e.key)){keyboardHint.classList.add('show');clearTimeout(kbTimer);kbTimer=setTimeout(()=>keyboardHint.classList.remove('show'),4000)}});
 
-const GAS_URL='https://script.google.com/macros/s/AKfycbyH0Q-JD6aIef5OScXy_cYw2KIdFDWCmHFaIG2EWZ_kPUr2UWbtilKnPOybbR7j237LPA/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbwzv7kiOFdprheyh3fr__9vUv1GVnaj9LZo-QRVAtNW0EDN3LVhYvwefIzwb8Gq6BsN4w/exec';
 document.getElementById('discordForm').addEventListener('submit',async function(e){e.preventDefault();const nome=document.getElementById('nome').value;const email=document.getElementById('email').value;const messaggio=document.getElementById('messaggio').value;const status=document.getElementById('formStatus');const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Invio in corso...';status.textContent='';const htmlLang=document.documentElement.lang||'it';const payload={nome:nome,email:email,messaggio:messaggio,lang:htmlLang};try{const response=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(response.ok){status.textContent='Messaggio inviato con successo! Ti risponderemo presto.';status.style.color='var(--accent)';document.getElementById('discordForm').reset()}else{throw new Error('Errore')}}catch(err){status.textContent='Errore: impossibile inviare il messaggio. Riprova più tardi.';status.style.color='#e74c3c'}finally{btn.disabled=false;btn.textContent='Invia messaggio'}});
 </script>
 </body>
