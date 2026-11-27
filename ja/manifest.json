@@ -1,0 +1,16 @@
+{
+  "name": "Émile Ognion — Portfolio",
+  "short_name": "Émile Ognion",
+  "description": "Portfolio ufficiale di Émile Ognion, pittore francese. Opere in inchiostro, acrilico e pastello.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png", "sizes": "512x512", "type": "image/png"}
+  ],
+  "lang": "it",
+  "categories": ["art", "portfolio", "painting"]
+}

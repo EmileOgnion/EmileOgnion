@@ -376,6 +376,65 @@ document.addEventListener('mouseup',()=>{isDragging=false;lightbox.style.cursor=
 // ダブルクリックでズームトグル
 lightbox.addEventListener('dblclick',e=>{e.preventDefault();if(scale>1.5){resetZoom()}else{scale=Math.min(scale*2.5,8);updateTransform()}});
 let lastDist=0;lightbox.addEventListener('touchstart',e=>{if(e.touches.length===2){lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)}},{passive:true});lightbox.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(lastDist>0){scale=Math.min(Math.max(scale*(dist/lastDist),0.01),8);updateTransform()}lastDist=dist}},{passive:false});
+// ============================================================
+// 全機能統合JS
+// ============================================================
+
+// --- 言語切り替え ---
+const langDropdown=document.getElementById('langDropdown');
+const langBtn=document.getElementById('langBtn');
+let langOpen=false;
+function toggleLang(){langOpen=!langOpen;langDropdown.classList.toggle('show',langOpen);langBtn.setAttribute('aria-expanded',langOpen)}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-switcher')){langOpen=false;langDropdown.classList.remove('show');langBtn.setAttribute('aria-expanded','false')}});
+
+// --- カテゴリーフィルター ---
+function filterWorks(category){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===category));
+  document.querySelectorAll('.artwork-card').forEach(card=>{
+    const show=category==='all'||card.dataset.category===category;
+    card.style.display=show?'block':'none';
+    if(show){card.classList.remove('reveal','visible');setTimeout(()=>card.classList.add('reveal','visible'),50)}
+  });
+}
+
+// --- ページトップ ---
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{toTop.classList.toggle('show',window.scrollY>400)},{passive:true});
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+
+// --- スクロールアニメーション ---
+const revealObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObserver.unobserve(e.target)}})},{threshold:0.1});
+document.querySelectorAll('.artwork-card, #biografia, #contatto').forEach(el=>{el.classList.add('reveal');revealObserver.observe(el)});
+
+// --- キーボードナビゲーション ---
+let focusedIndex=-1;
+const cards=()=>Array.from(document.querySelectorAll('.artwork-card')).filter(c=>c.style.display!=='none');
+document.addEventListener('keydown',e=>{
+  const c=cards();
+  if(document.getElementById('gallery-view').style.display==='none')return;
+  if(e.key==='ArrowRight'){e.preventDefault();focusedIndex=(focusedIndex+1)%c.length;c[focusedIndex]?.scrollIntoView({behavior:'smooth',block:'nearest'});c[focusedIndex]?.focus()}
+  if(e.key==='ArrowLeft'){e.preventDefault();focusedIndex=(focusedIndex-1+c.length)%c.length;c[focusedIndex]?.scrollIntoView({behavior:'smooth',block:'nearest'});c[focusedIndex]?.focus()}
+  if(e.key==='Enter'&&focusedIndex>=0){e.preventDefault();showDetail(focusedIndex)}
+});
+
+// --- SNSシェア ---
+function shareX(){if(!currentArtwork)return;const text=encodeURIComponent(currentArtwork.title+' — Émile Ognion');const url=encodeURIComponent(location.href);window.open('https://x.com/intent/tweet?text='+text+'&url='+url,'_blank','width=550,height=420')}
+function copyLink(){if(!currentArtwork)return;navigator.clipboard.writeText(location.href).then(()=>{const btn=document.getElementById('copyBtn');const orig=btn.textContent;btn.textContent='✓ Copiato';btn.classList.add('copied');setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied')},2000)})}
+
+// --- PWA ---
+let pwaDeferred=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pwaDeferred=e;setTimeout(()=>document.getElementById('pwaPrompt').classList.add('show'),2000)});
+function installPWA(){if(pwaDeferred){pwaDeferred.prompt();pwaDeferred.userChoice.then(()=>{document.getElementById('pwaPrompt').classList.remove('show')})}}
+function dismissPWA(){document.getElementById('pwaPrompt').classList.remove('show');localStorage.setItem('pwaDismissed','1')}
+if(localStorage.getItem('pwaDismissed')){document.getElementById('pwaPrompt').style.display='none'}
+
+// --- Service Worker登録 ---
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+
+// --- キーボードヒント表示 ---
+const keyboardHint=document.getElementById('keyboardHint');
+let kbTimer;document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft','Escape'].includes(e.key)){keyboardHint.classList.add('show');clearTimeout(kbTimer);kbTimer=setTimeout(()=>keyboardHint.classList.remove('show'),4000)}});
+
 const DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/1572918873068535858/3LfiE8a0rLqEbYuyfJjT_TEyd688wSNR2K39q3qg1DB0hH7h4zUbChdo3vvA_spXjMyz';
 document.getElementById('discordForm').addEventListener('submit',async function(e){e.preventDefault();const nome=document.getElementById('nome').value;const email=document.getElementById('email').value;const messaggio=document.getElementById('messaggio').value;const status=document.getElementById('formStatus');const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Sending...';status.textContent='';const payload={embeds:[{title:'New message from Émile Ognion website',color:0xc4a35a,fields:[{name:'Nome',value:nome,inline:true},{name:'Email',value:email,inline:true},{name:'Messaggio',value:messaggio}],timestamp:new Date().toISOString()}]};try{const response=await fetch(DISCORD_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(response.ok){status.textContent='Message sent successfully! We will reply soon.';status.style.color='var(--accent)';document.getElementById('discordForm').reset()}else{throw new Error('Errore')}}catch(err){status.textContent='Error: unable to send message. Please try again later.';status.style.color='#e74c3c'}finally{btn.disabled=false;btn.textContent='Send message'}});
 </script>
