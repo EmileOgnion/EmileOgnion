@@ -23,13 +23,54 @@
 <meta name="twitter:image" content="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png">
 <link rel="canonical" href="https://emileognion.github.io/EmileOgnion/">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Émile Ognion","jobTitle":"Pittore","nationality":"Francese","url":"https://emileognion.github.io/EmileOgnion/","image":"https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png","description":"Pittore francese non di fama mondiale. Opere in inchiostro, acrilico e pastello.","knowsAbout":["Pittura","Arte contemporanea","Inchiostro","Acrilico","Pastello"],"sameAs":[]}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "#website",
+      "name": "Émile Ognion",
+      "url": "https://emileognion.github.io/EmileOgnion/",
+      "inLanguage": "it",
+      "author": {"@id": "#person"},
+      "description": "Portfolio ufficiale di Émile Ognion, pittore francese. Opere in inchiostro, acrilico e pastello."
+    },
+    {
+      "@type": "Person",
+      "@id": "#person",
+      "name": "Émile Ognion",
+      "jobTitle": "Pittore",
+      "hasOccupation": {"@type": "Occupation", "name": "Pittore"},
+      "nationality": "Francese",
+      "birthPlace": {"@type": "Place", "name": "Francia"},
+      "url": "https://emileognion.github.io/EmileOgnion/",
+      "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png",
+      "description": "Pittore francese non di fama mondiale. Opere in inchiostro, acrilico e pastello.",
+      "knowsAbout": ["Pittura", "Arte contemporanea", "Inchiostro", "Acrilico", "Pastello"],
+      "sameAs": []
+    },
+    {
+      "@type": "ItemList",
+      "@id": "#portfolio",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "item": {"@type": "VisualArtwork", "name": "Onion", "artist": {"@id": "#person"}, "artMedium": "Inchiostro su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/onion.png"}},
+        {"@type": "ListItem", "position": 2, "item": {"@type": "VisualArtwork", "name": "Frammenti di Luce", "artist": {"@id": "#person"}, "artMedium": "Acrilico su tela", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1281.png"}},
+        {"@type": "ListItem", "position": 3, "item": {"@type": "VisualArtwork", "name": "Respiro di Colore", "artist": {"@id": "#person"}, "artMedium": "Pastello su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1282.png"}},
+        {"@type": "ListItem", "position": 4, "item": {"@type": "VisualArtwork", "name": "Tracce nel Vuoto", "artist": {"@id": "#person"}, "artMedium": "Acrilico su tela", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1275.jpeg"}},
+        {"@type": "ListItem", "position": 5, "item": {"@type": "VisualArtwork", "name": "Danza Cromatica", "artist": {"@id": "#person"}, "artMedium": "Pastello su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1283.png"}},
+        {"@type": "ListItem", "position": 6, "item": {"@type": "VisualArtwork", "name": "Confine del Mare", "artist": {"@id": "#person"}, "artMedium": "Inchiostro su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1284.png"}},
+        {"@type": "ListItem", "position": 7, "item": {"@type": "VisualArtwork", "name": "Sangue della Terra", "artist": {"@id": "#person"}, "artMedium": "Inchiostro su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1285.png"}},
+        {"@type": "ListItem", "position": 8, "item": {"@type": "VisualArtwork", "name": "Cuore del Caos", "artist": {"@id": "#person"}, "artMedium": "Inchiostro su carta", "dateCreated": "2026", "image": "https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1286.png"}}
+      ]
+    }
+  ]
+}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--ink:#f0ede8;--muted:#7a7568;--accent:#c4a35a;--line:rgba(255,255,255,0.06)}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 html{scroll-behavior:smooth}
 html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",sans-serif;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(196,163,90,0.03) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(100,80,50,0.04) 0%,transparent 50%);pointer-events:none;z-index:0}
@@ -102,6 +143,9 @@ main{position:relative;z-index:1;min-height:100vh;padding:7rem 1.5rem 4rem}
 .lightbox-close:hover{border-color:var(--accent);color:var(--ink)}
 .lightbox-close.show{display:flex}
 .zoom-level{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:210;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;background:rgba(10,10,10,0.8);padding:0.4rem 1rem;border-radius:999px;border:1px solid var(--line);display:none}
+.zoom-reset{position:fixed;top:1.5rem;right:5rem;z-index:210;background:none;border:1px solid var(--line);color:var(--muted);font-size:1.2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.3s}
+.zoom-reset:hover{border-color:var(--accent);color:var(--ink)}
+.zoom-reset.show{display:flex}
 .zoom-level.show{display:block}
 footer{position:relative;z-index:1;text-align:center;padding:3rem 1.5rem 2.5rem;font-size:0.7rem;color:rgba(255,255,255,0.15);letter-spacing:0.15em;text-transform:uppercase}
 footer p+p{margin-top:0.5rem}
@@ -132,7 +176,7 @@ footer p+p{margin-top:0.5rem}
   <div class="gallery">
     <div class="artwork-card" onclick="showDetail(0)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/onion.png" alt="Onion" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/onion.png" alt="Onion" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Onion</h3>
       <span class="year">2026</span>
@@ -140,7 +184,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(1)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1281.png" alt="Frammenti di Luce" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1281.png" alt="Frammenti di Luce" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Frammenti di Luce</h3>
       <span class="year">2026</span>
@@ -148,7 +192,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(2)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1282.png" alt="Respiro di Colore" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1282.png" alt="Respiro di Colore" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Respiro di Colore</h3>
       <span class="year">2026</span>
@@ -156,7 +200,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(3)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1275.jpeg" alt="Tracce nel Vuoto" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1275.jpeg" alt="Tracce nel Vuoto" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Tracce nel Vuoto</h3>
       <span class="year">2026</span>
@@ -164,7 +208,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(4)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1283.png" alt="Danza Cromatica" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1283.png" alt="Danza Cromatica" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Danza Cromatica</h3>
       <span class="year">2026</span>
@@ -172,7 +216,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(5)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1284.png" alt="Confine del Mare" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1284.png" alt="Confine del Mare" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Confine del Mare</h3>
       <span class="year">2026</span>
@@ -180,7 +224,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(6)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1285.png" alt="Sangue della Terra" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1285.png" alt="Sangue della Terra" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Sangue della Terra</h3>
       <span class="year">2026</span>
@@ -188,7 +232,7 @@ footer p+p{margin-top:0.5rem}
     </div>
     <div class="artwork-card" onclick="showDetail(7)">
       <div class="artwork-frame-sm">
-        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1286.png" alt="Cuore del Caos" draggable="false">
+        <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/IMG_1286.png" alt="Cuore del Caos" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3>Cuore del Caos</h3>
       <span class="year">2026</span>
@@ -199,7 +243,7 @@ footer p+p{margin-top:0.5rem}
 <section id="artwork-detail">
   <button class="back-btn" onclick="showGallery()">&larr; Torna alle opere</button>
   <div class="detail-image" id="detailImage" onclick="openZoom()">
-    <img src="" alt="" id="detailImg" draggable="false">
+    <img src="" alt="" id="detailImg" loading="eager" draggable="false">
   </div>
   <div class="detail-info">
     <h2 id="detailTitle"></h2>
@@ -213,7 +257,7 @@ footer p+p{margin-top:0.5rem}
   <div class="divider"></div>
   <div class="bio-content">
     <div class="bio-avatar">
-      <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png" alt="Émile Ognion" draggable="false">
+      <img src="https://github.com/EmileOgnion/EmileOgnion/releases/download/%C3%89mileOgnion/mini_onion.png" alt="Émile Ognion" loading="lazy" decoding="async" draggable="false">
     </div>
     <div class="bio-text">
       <p>Sono un pittore francese, non di fama mondiale.</p>
@@ -247,7 +291,7 @@ footer p+p{margin-top:0.5rem}
 <div class="lightbox" id="lightbox" onclick="closeZoom(event)">
   <img src="" alt="" class="lightbox-img" id="zoomImg" draggable="false">
 </div>
-<button class="lightbox-close" id="closeBtn" onclick="closeZoomBtn()">&times;</button>
+<button class="lightbox-close" id="closeBtn" onclick="closeZoomBtn()">&times;</button><button class="zoom-reset" id="zoomReset" onclick="resetZoom()" title="Reset zoom">⌖</button>
 <div class="zoom-level" id="zoomLevel">100%</div>
 <div class="watermark">&copy; Émile Ognion</div>
 <footer>
@@ -255,7 +299,60 @@ footer p+p{margin-top:0.5rem}
   <p style="font-size:0.65rem;color:rgba(255,255,255,0.12);">È vietata la riproduzione, il download o qualsiasi altro uso non autorizzato. Ogni atto ad essi equiparato è altresì proibito.</p>
 </footer>
 <script>
-document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('dragstart',e=>e.preventDefault());document.addEventListener('selectstart',e=>e.preventDefault());document.addEventListener('copy',e=>e.preventDefault());document.addEventListener('keydown',e=>{if(e.key==='PrintScreen'||(e.ctrlKey&&['s','S','p','u'].includes(e.key)))e.preventDefault()});window.addEventListener('keyup',e=>{if(e.key==='PrintScreen'){document.body.style.filter='blur(20px)';setTimeout(()=>document.body.style.filter='',1000)}});
+// === 画像保護強化 ===
+(function(){
+  'use strict';
+  // 右クリック・ドラッグ・選択・コピー禁止
+  document.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG'||e.target.closest('.artwork-frame-sm')||e.target.closest('.detail-image')||e.target.closest('.lightbox'))e.preventDefault()});
+  document.addEventListener('dragstart',e=>e.preventDefault());
+  document.addEventListener('selectstart',e=>e.preventDefault());
+  document.addEventListener('copy',e=>e.preventDefault());
+  document.addEventListener('cut',e=>e.preventDefault());
+  document.addEventListener('paste',e=>e.preventDefault());
+
+  // キーボードショートカットブロック
+  document.addEventListener('keydown',e=>{
+    if(e.key==='PrintScreen'){e.preventDefault();document.body.style.filter='blur(30px)';setTimeout(()=>document.body.style.filter='',1500)}
+    if(e.ctrlKey&&['s','S','p','u','c','C','a','A'].includes(e.key))e.preventDefault();
+    if(e.metaKey&&['s','S','p','c','C'].includes(e.key))e.preventDefault();
+    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['i','I','j','J','c','C'].includes(e.key))e.preventDefault();
+    if(e.key==='F12'||e.key==='Pause'||e.key==='Break')e.preventDefault();
+  });
+  window.addEventListener('keyup',e=>{if(e.key==='PrintScreen'){document.body.style.filter='blur(30px)';setTimeout(()=>document.body.style.filter='',1500)}});
+
+  // モバイル長押し・3D Touch対策
+  document.addEventListener('touchstart',function(e){if(e.target.tagName==='IMG')e.preventDefault()},{passive:false});
+  document.addEventListener('touchforcechange',function(e){if(e.target.tagName==='IMG')e.preventDefault()});
+  document.addEventListener('gesturestart',e=>e.preventDefault());
+  document.addEventListener('gesturechange',e=>e.preventDefault());
+  document.addEventListener('gestureend',e=>e.preventDefault());
+
+  // 開発者ツール検出（サイズ差分法 + コンソール法）
+  const devtools={open:false,orientation:null};
+  const threshold=160;
+  setInterval(()=>{
+    const widthThreshold=window.outerWidth-window.innerWidth>threshold;
+    const heightThreshold=window.outerHeight-window.innerHeight>threshold;
+    const orientation=widthThreshold?'vertical':'horizontal';
+    if(!(heightThreshold&&widthThreshold)&&(window.Firebug&&window.Firebug.chrome&&window.Firebug.chrome.isInitialized||widthThreshold||heightThreshold)){
+      if(!devtools.open||devtools.orientation!==orientation){devtools.open=true;devtools.orientation=orientation;document.body.innerHTML='<div style="position:fixed;inset:0;z-index:99999;background:#0a0a0a;color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-size:1.1rem;padding:2rem;text-align:center;letter-spacing:0.1em">Accesso negato</div>';}}
+  },1000);
+
+  // console.log インターバル検出
+  const element=new Image();Object.defineProperty(element,'id',{get:function(){throw new Error('DevTools detected')}});
+  setInterval(()=>{try{console.log('%c',element)}catch(e){document.body.style.filter='blur(30px)';setTimeout(()=>document.body.style.filter='',2000)}},2000);
+
+  // Debugger検出
+  setInterval(()=>{const start=performance.now();debugger;const end=performance.now();if(end-start>100){document.body.style.filter='blur(30px)';setTimeout(()=>document.body.style.filter='',2000)}},1500);
+
+  // 右クリック長押し（iOS/Android）
+  let pressTimer;
+  document.addEventListener('mousedown',e=>{if(e.target.tagName==='IMG'){pressTimer=setTimeout(()=>e.preventDefault(),500)}});
+  document.addEventListener('mouseup',()=>clearTimeout(pressTimer));
+
+  // 画像上でのショートカット全般
+  document.addEventListener('keydown',e=>{if(e.target.tagName==='IMG'&&(e.ctrlKey||e.metaKey))e.preventDefault()});
+})();
 const hamburger=document.getElementById('hamburger');const dropdownMenu=document.getElementById('dropdownMenu');const menuOverlay=document.getElementById('menuOverlay');
 function toggleMenu(){hamburger.classList.toggle('active');dropdownMenu.classList.toggle('active');menuOverlay.classList.toggle('active');document.body.style.overflow=dropdownMenu.classList.contains('active')?'hidden':''}
 function closeMenu(){hamburger.classList.remove('active');dropdownMenu.classList.remove('active');menuOverlay.classList.remove('active');document.body.style.overflow=''}
@@ -264,17 +361,20 @@ const artworks=[{image:"https://github.com/EmileOgnion/EmileOgnion/releases/down
 let currentArtwork=null;
 function showDetail(index){currentArtwork=artworks[index];document.getElementById('gallery-view').style.display='none';document.getElementById('artwork-detail').classList.add('active');document.getElementById('biografia').style.display='none';document.getElementById('contatto').style.display='none';document.querySelector('footer').style.display='none';document.getElementById('detailImg').src=currentArtwork.image;document.getElementById('detailImg').alt=currentArtwork.title;document.getElementById('detailTitle').textContent=currentArtwork.title;document.getElementById('detailYear').textContent=currentArtwork.year;document.getElementById('detailMedium').innerHTML=currentArtwork.medium;document.getElementById('detailDesc').textContent=currentArtwork.desc;window.scrollTo(0,0)}
 function showGallery(){document.getElementById('gallery-view').style.display='block';document.getElementById('artwork-detail').classList.remove('active');document.getElementById('biografia').style.display='block';document.getElementById('contatto').style.display='block';document.querySelector('footer').style.display='block';window.scrollTo(0,0)}
-const lightbox=document.getElementById('lightbox');const zoomImg=document.getElementById('zoomImg');const closeBtn=document.getElementById('closeBtn');const zoomLevel=document.getElementById('zoomLevel');
+const lightbox=document.getElementById('lightbox');const zoomImg=document.getElementById('zoomImg');const closeBtn=document.getElementById('closeBtn');const zoomReset=document.getElementById('zoomReset');const zoomLevel=document.getElementById('zoomLevel');
 let scale=1;let panX=0,panY=0;let isDragging=false;let startX,startY;
 function updateTransform(){zoomImg.style.transform=`translate(${panX}px,${panY}px) scale(${scale})`;zoomLevel.textContent=Math.round(scale*100)+'%'}
-function openZoom(){if(!currentArtwork)return;zoomImg.src=currentArtwork.image;zoomImg.alt=currentArtwork.title;lightbox.classList.add('active');closeBtn.classList.add('show');zoomLevel.classList.add('show');scale=1;panX=0;panY=0;updateTransform()}
-function closeZoom(event){if(event.target===lightbox){lightbox.classList.remove('active');closeBtn.classList.remove('show');zoomLevel.classList.remove('show');zoomImg.src=''}}
-function closeZoomBtn(){lightbox.classList.remove('active');closeBtn.classList.remove('show');zoomLevel.classList.remove('show');zoomImg.src=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeZoomBtn();closeMenu()}});
+function openZoom(){if(!currentArtwork)return;zoomImg.src=currentArtwork.image;zoomImg.alt=currentArtwork.title;lightbox.classList.add('active');closeBtn.classList.add('show');zoomReset.classList.add('show');zoomLevel.classList.add('show');scale=1;panX=0;panY=0;updateTransform()}
+function resetZoom(){scale=1;panX=0;panY=0;updateTransform()}
+function closeZoom(event){if(event.target===lightbox){lightbox.classList.remove('active');closeBtn.classList.remove('show');zoomReset.classList.remove('show');zoomLevel.classList.remove('show');zoomImg.src=''}}
+function closeZoomBtn(){lightbox.classList.remove('active');closeBtn.classList.remove('show');zoomReset.classList.remove('show');zoomLevel.classList.remove('show');zoomImg.src=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeZoomBtn();closeMenu()}if(lightbox.classList.contains('active')){if(e.key==='+'||e.key==='='){e.preventDefault();scale=Math.min(scale*1.2,8);updateTransform()}if(e.key==='-'){e.preventDefault();scale=Math.max(scale*0.8,0.01);updateTransform()}if(e.key==='0'){e.preventDefault();resetZoom()}}});
 lightbox.addEventListener('wheel',e=>{e.preventDefault();const delta=e.deltaY>0?0.9:1.1;scale=Math.min(Math.max(scale*delta,0.01),8);updateTransform()},{passive:false});
 lightbox.addEventListener('mousedown',e=>{isDragging=true;startX=e.clientX-panX;startY=e.clientY-panY;lightbox.style.cursor='grabbing'});
 document.addEventListener('mousemove',e=>{if(!isDragging)return;panX=e.clientX-startX;panY=e.clientY-startY;updateTransform()});
 document.addEventListener('mouseup',()=>{isDragging=false;lightbox.style.cursor='zoom-out'});
+// ダブルクリックでズームトグル
+lightbox.addEventListener('dblclick',e=>{e.preventDefault();if(scale>1.5){resetZoom()}else{scale=Math.min(scale*2.5,8);updateTransform()}});
 let lastDist=0;lightbox.addEventListener('touchstart',e=>{if(e.touches.length===2){lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)}},{passive:true});lightbox.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(lastDist>0){scale=Math.min(Math.max(scale*(dist/lastDist),0.01),8);updateTransform()}lastDist=dist}},{passive:false});
 const DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/1572918873068535858/3LfiE8a0rLqEbYuyfJjT_TEyd688wSNR2K39q3qg1DB0hH7h4zUbChdo3vvA_spXjMyz';
 document.getElementById('discordForm').addEventListener('submit',async function(e){e.preventDefault();const nome=document.getElementById('nome').value;const email=document.getElementById('email').value;const messaggio=document.getElementById('messaggio').value;const status=document.getElementById('formStatus');const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Invio in corso...';status.textContent='';const payload={embeds:[{title:'Nuovo messaggio dal sito Émile Ognion',color:0xc4a35a,fields:[{name:'Nome',value:nome,inline:true},{name:'Email',value:email,inline:true},{name:'Messaggio',value:messaggio}],timestamp:new Date().toISOString()}]};try{const response=await fetch(DISCORD_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(response.ok){status.textContent='Messaggio inviato con successo! Ti risponderemo presto.';status.style.color='var(--accent)';document.getElementById('discordForm').reset()}else{throw new Error('Errore')}}catch(err){status.textContent='Errore: impossibile inviare il messaggio. Riprova più tardi.';status.style.color='#e74c3c'}finally{btn.disabled=false;btn.textContent='Invia messaggio'}});
